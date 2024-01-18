@@ -54,6 +54,7 @@ func (s3fs *s3fsMounter) Mount(source string, target string) error {
 		target,
 		"-o", "use_path_request_style",
 		"-o", "streamupload",
+		"-o", "enable_content_md5",
 		"-o", fmt.Sprintf("url=%s", s3fs.url),
 		"-o", fmt.Sprintf("endpoint=%s", s3fs.region),
 		"-o", "allow_other",
