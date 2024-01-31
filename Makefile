@@ -29,13 +29,12 @@ build: bin/s3driver
 
 bin/s3driver: pkg/s3/*.go cmd/s3driver/*.go
 	CGO_ENABLED=0 GOOS=linux \
-	go build -a -trimpath -ldflags "-extldflags '-static' \
+	go build -a -trimpath -ldflags "-s -w -extldflags '-static' \
                           -X 'github.com/metal-stack/v.Version=$(VERSION)' \
                           -X 'github.com/metal-stack/v.Revision=$(GITVERSION)' \
                           -X 'github.com/metal-stack/v.GitSHA1=$(SHA)' \
                           -X 'github.com/metal-stack/v.BuildDate=$(BUILDDATE)'" \
 		-o $@ ./cmd/s3driver
-	strip bin/s3driver
 
 test:
 	docker build -t $(TEST_IMAGE_TAG) -f test/Dockerfile .
