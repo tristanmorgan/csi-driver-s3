@@ -19,9 +19,11 @@ package main
 import (
 	"flag"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/majst01/csi-driver-s3/pkg/s3"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func init() {
@@ -34,10 +36,21 @@ func init() {
 var (
 	endpoint = flag.String("endpoint", "unix://tmp/csi.sock", "CSI endpoint")
 	nodeID   = flag.String("nodeid", "", "node id")
+	httpAddr = flag.String("listen", ":8080", "Metrics address")
 )
 
 func main() {
 	flag.Parse()
+
+	log.Printf("Serving metrics on TCP port '%s'...", *httpAddr)
+	http.Handle("/metrics", promhttp.Handler())
+
+	go func() {
+		err := http.ListenAndServe(*httpAddr, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
 
 	driver, err := s3.New(*nodeID, *endpoint)
 	if err != nil {
