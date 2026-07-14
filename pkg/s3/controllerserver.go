@@ -41,7 +41,7 @@ func (cs *controllerServer) ControllerGetVolume(ctx context.Context, req *csi.Co
 }
 
 func (cs *controllerServer) CreateVolume(ctx context.Context, req *csi.CreateVolumeRequest) (*csi.CreateVolumeResponse, error) {
-	volumeID := req.GetName()
+	volumeID := sanitizeVolumeID(req.GetName())
 
 	if err := cs.Driver.ValidateControllerServiceRequest(csi.ControllerServiceCapability_RPC_CREATE_DELETE_VOLUME); err != nil {
 		klog.Infof("invalid create volume req: %v", req)
@@ -162,7 +162,7 @@ func sanitizeVolumeID(volumeID string) string {
 	if len(volumeID) > 63 {
 		h := sha256.New()
 		_, _ = io.WriteString(h, volumeID)
-		volumeID = hex.EncodeToString(h.Sum(nil))
+		volumeID = hex.EncodeToString(h.Sum(nil))[:63]
 	}
 	return volumeID
 }

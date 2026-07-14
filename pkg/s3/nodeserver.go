@@ -117,10 +117,21 @@ func (ns *nodeServer) NodeUnpublishVolume(ctx context.Context, req *csi.NodeUnpu
 		return nil, status.Error(codes.InvalidArgument, "Target path missing in request")
 	}
 
-	cmd := exec.Command("umount", "--lazy", "--force", targetPath)
+	// Try umount with force flag first (works on both GNU and BusyBox)
+	cmd := exec.Command("umount", "-f", targetPath)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		return nil, status.Error(codes.Internal, fmt.Sprintf("unable to umount %q output:%s err:%v", targetPath, string(out), err))
+		// If force umount fails, try lazy umount (GNU only)
+		cmd = exec.Command("umount", "-l", targetPath)
+		out, err = cmd.CombinedOutput()
+		if err != nil {
+			// If both fail, try basic umount
+			cmd = exec.Command("umount", targetPath)
+			out, err = cmd.CombinedOutput()
+			if err != nil {
+				return nil, status.Error(codes.Internal, fmt.Sprintf("unable to umount %q output:%s err:%v", targetPath, string(out), err))
+			}
+		}
 	}
 	klog.Infof("s3 bucket %q has been unmounted.", volumeID)
 
