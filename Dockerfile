@@ -1,39 +1,40 @@
-FROM alpine:3.18 AS s3fs-builder
-
-ARG S3FS_VERSION=v1.93
+FROM alpine AS s3fs-builder
 
 RUN apk --no-cache add \
         ca-certificates \
         build-base \
         git \
         alpine-sdk \
+        openssl-dev \
+        libxml2 \
+        libxml2-dev \
         libcurl \
+        curl-dev \
         automake \
         autoconf \
-        libxml2-dev \
         mailcap \
-        fuse-dev \
-        curl-dev \
+        fuse3 \
+        fuse3-dev \
  && git clone https://github.com/s3fs-fuse/s3fs-fuse.git \
  && cd s3fs-fuse \
- && git checkout tags/${S3FS_VERSION} \
  && ./autogen.sh \
- &&./configure --prefix=/usr \
- && make -j \
+ && ./configure --prefix=/usr \
+ && make \
  && make install \
  && strip /usr/bin/s3fs
 
-FROM golang:1.21-alpine as builder
+FROM golang:alpine AS builder
 RUN apk add git make binutils
 COPY / /work
 WORKDIR /work
+RUN go mod tidy
 RUN make
 
-FROM alpine:3.18
+FROM alpine
 RUN apk --no-cache add \
     ca-certificates \
     mailcap \
-    fuse \
+    fuse3 \
     libxml2 \
     libcurl \
     libgcc \

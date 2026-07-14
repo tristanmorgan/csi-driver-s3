@@ -53,10 +53,11 @@ func (s3fs *s3fsMounter) Mount(source string, target string) error {
 		fmt.Sprintf("%s:/%s", s3fs.metadata.Name, s3fs.metadata.FSPath),
 		target,
 		"-o", "use_path_request_style",
+		"-o", "streamupload",
 		"-o", fmt.Sprintf("url=%s", s3fs.url),
-		"-o", fmt.Sprintf("endpoint=%s", s3fs.region),
+		"-o", fmt.Sprintf("region=%s", s3fs.region),
 		"-o", "allow_other",
-		"-o", "mp_umask=000",
+		"-o", "compat_dir",
 	}
 	return fuseMount(s3fsCmd, args)
 }
