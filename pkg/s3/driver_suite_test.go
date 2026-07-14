@@ -9,6 +9,8 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/kubernetes-csi/csi-test/v4/pkg/sanity"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var _ = Describe("S3Driver", func() {
@@ -33,6 +35,9 @@ var _ = Describe("S3Driver", func() {
 				SecretsFile: "../../test/secret.yaml",
 				TestVolumeParameters: map[string]string{
 					"mounter": "s3fs",
+				},
+				DialOptions: []grpc.DialOption{
+					grpc.WithTransportCredentials(insecure.NewCredentials()),
 				},
 			}
 			sanity.GinkgoTest(sanityCfg)

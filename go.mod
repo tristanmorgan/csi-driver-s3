@@ -1,6 +1,6 @@
 module github.com/majst01/csi-driver-s3
 
-go 1.19
+go 1.21
 
 require (
 	github.com/container-storage-interface/spec v1.8.0

@@ -98,7 +98,7 @@ func (cs *controllerServer) DeleteVolume(ctx context.Context, req *csi.DeleteVol
 	}
 	if exists {
 		if err := s3.removeBucket(volumeID); err != nil {
-			klog.Errorf("Failed to remove volume %s: %w", volumeID, err)
+			klog.Errorf("Failed to remove volume %s: %s", volumeID, err)
 			return nil, err
 		}
 	} else {
