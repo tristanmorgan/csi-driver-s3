@@ -157,6 +157,10 @@ func (cs *controllerServer) ControllerExpandVolume(ctx context.Context, req *csi
 	return &csi.ControllerExpandVolumeResponse{}, status.Error(codes.Unimplemented, "ControllerExpandVolume is not implemented")
 }
 
+func (cs *controllerServer) ControllerModifyVolume(ctx context.Context, req *csi.ControllerModifyVolumeRequest) (*csi.ControllerModifyVolumeResponse, error) {
+	return &csi.ControllerModifyVolumeResponse{}, status.Error(codes.Unimplemented, "ControllerModifyVolume is not implemented")
+}
+
 func sanitizeVolumeID(volumeID string) string {
 	volumeID = strings.ToLower(volumeID)
 	if len(volumeID) > 63 {

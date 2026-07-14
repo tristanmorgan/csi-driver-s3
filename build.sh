@@ -12,6 +12,6 @@ docker manifest create registry.service.home.consul/csi-driver-s3:$TS_VAR --amen
 docker manifest push registry.service.home.consul/csi-driver-s3:$TS_VAR
 docker manifest rm registry.service.home.consul/csi-driver-s3:$TS_VAR
 
-#docker manifest create registry.service.home.consul/csi-driver-s3:latest --amend registry.service.home.consul/csi-driver-s3:$TS_VAR-arm64 --amend registry.service.home.consul/csi-driver-s3:$TS_VAR-amd64
-#docker manifest push registry.service.home.consul/csi-driver-s3:latest
-#docker manifest rm registry.service.home.consul/csi-driver-s3:latest
+docker manifest create registry.service.home.consul/csi-driver-s3:latest --amend registry.service.home.consul/csi-driver-s3:$TS_VAR-arm64 --amend registry.service.home.consul/csi-driver-s3:$TS_VAR-amd64
+docker manifest push registry.service.home.consul/csi-driver-s3:latest
+docker manifest rm registry.service.home.consul/csi-driver-s3:latest
