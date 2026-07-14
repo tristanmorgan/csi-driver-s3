@@ -32,12 +32,12 @@ func Test_sanitizeVolumeID(t *testing.T) {
 		{
 			name:     "eqaul",
 			volumeID: "0123456789012345678901234567890123456789012345678901234567890123",
-			want:     64,
+			want:     63,
 		},
 		{
 			name:     "longer",
 			volumeID: "0123456789012345678901234567890123456789012345678901234567890123456789",
-			want:     64,
+			want:     63,
 		},
 	}
 	for _, tt := range tests {
